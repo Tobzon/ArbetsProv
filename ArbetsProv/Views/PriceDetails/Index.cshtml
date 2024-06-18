@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ArbetsProv.Models.PriceDetails>
+
+  
+
+@{
+    ViewData["Title"] = "Index";
+
+   
+}
+
+
+<h1>Index</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+
+                @Html.DisplayNameFor(model => model.MarketId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrencyCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValidFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ValidUntil)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        
+ @foreach (var item in Model ) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MarketId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrencyCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValidFrom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValidUntil)
+            </td>
+
+        </tr>
+}
+    </tbody>
+</table>
