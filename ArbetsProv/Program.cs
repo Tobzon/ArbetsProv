@@ -1,15 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ArbetsProv.Data;
+using System.Data.SQLite;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PriceDetailsContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PriceDetailContext") ?? throw new InvalidOperationException("Connection string 'PriceDetailContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PriceDetailsContext") ?? throw new InvalidOperationException("Connection string 'PriceDetailsContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<PriceDetailsContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("PriceDetailContext")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("PriceDetailsContext")));
 
 var app = builder.Build();
 
