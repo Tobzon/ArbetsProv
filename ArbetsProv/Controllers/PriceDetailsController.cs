@@ -27,19 +27,28 @@ namespace ArbetsProv.Controllers
         {
 
             var nlist = new List<PriceDetails>();
+           
 
             var list = await _context.PriceDetails.Where(options =>
-            options.CatalogEntryCode.Equals("27773-02") && options.MarketId.Equals("sv")
+            options.CatalogEntryCode.Equals("20866-02") && options.MarketId.Equals("sv")
             ).OrderBy(e => e.ValidFrom).ToListAsync();
 
             for(int i = 0; i <= list.Count; i++)
             {
+             
+
 
                 if (i == 0)
                 {
 
                     list[i].ValidUntil = list[i + 1].ValidFrom;
                     nlist.Add(list[i].Copy());
+                }
+                else if (i < list.Count - 1 && list[i].UnitPrice == nlist.Last().UnitPrice)
+                {
+                    var temp = list[i].Copy();
+                    nlist.Last().ValidUntil = list[i].ValidUntil;
+                    continue;
                 }
                 else if ( i < list.Count - 1 && list[i].ValidUntil >= list[i + 1].ValidFrom )
                 {
@@ -51,21 +60,59 @@ namespace ArbetsProv.Controllers
 
                 }
                 else if(i < list.Count - 1 && list[i].ValidUntil < list[i + 1].ValidFrom)
-                {
-                    var temp = list[0].Copy();
-                    nlist.Add(list[i].Copy());
-                    temp.ValidFrom = list[i].Copy().ValidUntil.GetValueOrDefault();
-                    temp.ValidUntil = list[i + 1].Copy().ValidFrom;
 
-                   nlist.Add(temp);
+                {
+
+                    if (list[i].ValidUntil != list[i+1].ValidFrom)
+                    {
+                        var temp = list[0].Copy();
+                        temp.ValidFrom = list[i].Copy().ValidUntil.GetValueOrDefault();
+                        temp.ValidUntil = list[i + 1].Copy().ValidFrom;
+                        nlist.Add(temp);
+                    }
+                    
+
+                    nlist.Add(list[i].Copy());
+                    
+
+                   
                 }
                 else if (i == list.Count)
                 {
+                   
+                   var datelist = list;
+                    datelist.OrderBy(e => e.ValidUntil);
+                    
+                      for(int j = 0; j < datelist.Count; j++)
+                      {
+                            if (datelist[j].ValidUntil > nlist.Last().ValidUntil)
+                            {
 
+                                if (datelist[j].UnitPrice == nlist.Last().UnitPrice)
+                                {
+                                    var ddtemp = datelist[j];
+                                    nlist.Last().ValidUntil = datelist[j].ValidUntil;
+
+                                    continue;
+                                }
+
+                                var dtemp = datelist[j];
+                                dtemp.ValidFrom = nlist.Last().ValidUntil.GetValueOrDefault();
+                                nlist.Add(dtemp);
+                                continue;
+
+                            }
+                         
+
+                      }
                     var temp = list[0].Copy();
-                    temp.ValidFrom = list[i-1].ValidUntil.GetValueOrDefault();
+                    temp.ValidFrom = nlist.Last().ValidUntil.GetValueOrDefault();
                     temp.ValidUntil = null;
                     nlist.Add(temp);
+                    continue;
+ 
+
+                    
 
                 }
                 else
